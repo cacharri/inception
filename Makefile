@@ -1,7 +1,11 @@
+# Variables
+DOCKER_COMPOSE = docker-compose -f srcs/docker-compose.yml
+
+# Reglas
 all:
-	docker-compose -f srcs/docker-compose.yml up --build
+	$(DOCKER_COMPOSE) up --build
 
 clean:
-	docker-compose -f srcs/docker-compose.yml down -v
+	$(DOCKER_COMPOSE) down -v
 
 re: clean all

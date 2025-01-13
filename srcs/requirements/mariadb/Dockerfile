@@ -1,21 +1,12 @@
-FROM debian:bullseye
+FROM mariadb:10.5
 
-# Instalar MariaDB
-RUN apt-get update && apt-get install -y mariadb-server
+# Establecer las variables de entorno para la base de datos
+ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+ENV MYSQL_DATABASE=${MYSQL_DATABASE}
+ENV MYSQL_USER=${MYSQL_USER}
+ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
-# Crear directorios necesarios y asignar permisos
-RUN mkdir -p /run/mysqld && \
-    chown -R mysql:mysql /var/lib/mysql /run/mysqld
+# Copiar configuración adicional (si es necesaria)
+# COPY conf/my.cnf /etc/mysql/my.cnf
 
-# Inicializar la base de datos de MariaDB
-RUN mysql_install_db --user=mysql --ldata=/var/lib/mysql
-
-# Copiar archivo de configuración
-COPY ./conf/my.cnf /etc/mysql/my.cnf
-
-# Especificar el usuario y exponer el puerto
-USER mysql
-EXPOSE 3306
-
-# Comando para iniciar MariaDB
 CMD ["mysqld"]
