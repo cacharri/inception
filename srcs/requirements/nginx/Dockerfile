@@ -11,6 +11,6 @@ RUN mkdir -p /etc/nginx/ssl && \
     -out /etc/nginx/ssl/nginx.crt \
     -subj "/CN=${DOMAIN_NAME}"
 
-COPY conf/nginx.conf /etc/nginx/conf/nginx.conf
+COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx", "-g", "daemon off;"]
