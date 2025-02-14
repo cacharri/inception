@@ -28,7 +28,7 @@ services:
   nginx:
     build: ./requirements/nginx
     ports:
-      - "8080:443"
+      - "433:443"
     networks:
       - inception_network
     depends_on:
