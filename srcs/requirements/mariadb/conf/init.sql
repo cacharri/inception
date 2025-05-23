@@ -1,0 +1,7 @@
+-- Crear base de datos si no existe
+CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
+
+-- Crear usuario si no existe y otorgar permisos
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
+FLUSH PRIVILEGES;

@@ -1,12 +1,22 @@
-FROM mariadb:10.5
+FROM debian:bullseye
 
-# Establecer las variables de entorno para la base de datos
-ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-ENV MYSQL_DATABASE=${MYSQL_DATABASE}
-ENV MYSQL_USER=${MYSQL_USER}
-ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Copiar configuración adicional (si es necesaria)
-# COPY conf/my.cnf /etc/mysql/my.cnf
+# Instalar MariaDB
+RUN apt-get update && apt-get install -y mariadb-server && apt-get clean
 
-CMD ["mysqld"]
+# Crear directorios necesarios
+RUN mkdir -p /etc/mysql /var/lib/mysql /run/mysqld && chown -R mysql:mysql /var/lib/mysql /run/mysqld
+
+# Copiar archivos de inicialización
+COPY conf/init.sql /etc/mysql/init.sql
+COPY tools/init.sh /init.sh
+
+# Permisos de ejecución
+RUN chmod +x /init.sh
+
+# Exponer el puerto estándar de MariaDB
+EXPOSE 3306
+
+# Comando de inicio
+CMD ["/init.sh"]

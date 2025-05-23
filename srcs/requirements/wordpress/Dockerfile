@@ -1,24 +1,24 @@
-FROM wordpress:php7.4-fpm
+FROM debian:bullseye
 
-# Instalar extensiones necesarias
-RUN apt-get update && apt-get install -y default-mysql-client procps psmisc curl \
-    && docker-php-ext-install mysqli \
-    && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Configurar PHP-FPM para escuchar en IPv4
-RUN sed -i 's/listen = .*/listen = 0.0.0.0:9000/' /usr/local/etc/php-fpm.d/www.conf
+RUN apt-get update && apt-get install -y \
+    php php-fpm php-mysql curl unzip wget less mariadb-client \
+    && apt-get clean
 
-# Asegurar permisos de WordPress
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+RUN mkdir -p /var/www/html && chown -R www-data:www-data /var/www/html
 
-# Instalar wp-cli
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp
+# Instalar WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 
-# Copiar el archivo de configuración de WordPress
+# Copiar archivo de configuración y script de setup
 COPY conf/wp-config.php /var/www/html/wp-config.php
+COPY tools/wp-setup.sh /usr/local/bin/wp-setup.sh
 
-# Ejecutar PHP-FPM en primer plano
-CMD ["php-fpm", "-F"]
+RUN chmod +x /usr/local/bin/wp-setup.sh && chown www-data:www-data /usr/local/bin/wp-setup.sh
+
+# Configurar PHP-FPM
+RUN sed -i 's|listen = .*|listen = 9000|' /etc/php/*/fpm/pool.d/www.conf
+
+CMD ["wp-setup.sh"]

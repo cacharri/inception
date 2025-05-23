@@ -1,13 +1,13 @@
 <?php
 // Configuración de la base de datos
-define( 'DB_NAME', 'wordpress' );
-define( 'DB_USER', 'wp_user' );
-define( 'DB_PASSWORD', 'wp_password' );
-define( 'DB_HOST', 'mariadb' );
+define( 'DB_NAME', getenv('WORDPRESS_DB_NAME') );
+define( 'DB_USER', getenv('WORDPRESS_DB_USER') );
+define( 'DB_PASSWORD', getenv('WORDPRESS_DB_PASSWORD') );
+define( 'DB_HOST', getenv('WORDPRESS_DB_HOST') );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
-// Claves de autenticación (puedes generarlas en: https://api.wordpress.org/secret-key/1.1/salt/)
+// Claves de autenticación (reemplaza con claves reales en producción)
 define( 'AUTH_KEY',         'pon-aqui-tu-clave' );
 define( 'SECURE_AUTH_KEY',  'pon-aqui-tu-clave' );
 define( 'LOGGED_IN_KEY',    'pon-aqui-tu-clave' );
@@ -23,9 +23,9 @@ $table_prefix = 'wp_';
 // Habilitar debug solo en desarrollo
 define( 'WP_DEBUG', false );
 
-// Configuración de la URL del sitio (ajústalo si es necesario)
-define( 'WP_SITEURL', 'https://localhost:433' );
-define( 'WP_HOME', 'https://localhost:433' );
+// URL del sitio
+define( 'WP_SITEURL', 'https://' . getenv('DOMAIN_NAME') );
+define( 'WP_HOME', 'https://' . getenv('DOMAIN_NAME') );
 
 // Configuración de archivos directos (evita problemas con FTP en Docker)
 define( 'FS_METHOD', 'direct' );
